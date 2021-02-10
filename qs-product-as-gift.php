@@ -3,7 +3,7 @@
 Plugin Name: Quiero Spain product as gift
 Plugin URI: https://novadevs.com/
 Description: Plugin que habilita la posibilidad de agregar al carrito un producto en forma de regalo
-Version: 0.0.0
+Version: 1.0.0-rc
 Author: Bruno Lorente
 Author URI: https://github.com/brunolorente
 License: GPLv2 or later

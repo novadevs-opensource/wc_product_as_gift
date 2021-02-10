@@ -1,43 +1,38 @@
 /*global wc_add_to_cart_variation_params */
 ;(function ( $, window, document, undefined ) {
     
-    $('document').ready(function(){
-        $('#product-combinations button').on('click', setVariant);
+    $('document').ready(function() {
+        setVariant();
     });
 
 
     $('.reset_variations').on('click', function(){
-        $('#product-combinations button').removeClass('btn-danger');
-        $('#product-combinations button').removeClass('btn-success');
+        $( "#gift-switch" ).prop( "checked", false );
     });
+
+    $('.switch-text').on('click', function() {
+        // $('#gift-switch').trigger('click');
+    })
+
+    $('#gift-switch').on('click', setVariant);
     
 
     function setVariant(e) {
-        e.preventDefault();
-        target = $(this).data('target');
-        value = $(this).data('value');
-        form = $('form');
 
-        $('#product-combinations button').removeClass('active');
-        $(this).addClass('active');
-        if (value == "no" || value == 0) {
-            $('#product-combinations button').removeClass('btn-danger');
-            $('#product-combinations button').removeClass('btn-success');
-            if ($(this).hasClass('active')) {
-                $(this).addClass('btn-danger');
-            }
+        if ($(this).is(":checked")){
+            $(this).data('target', "true");
         } else {
-            $('#product-combinations button').removeClass('btn-danger');
-            $('#product-combinations button').removeClass('btn-success');
-            if ($(this).hasClass('active')) {
-                $(this).addClass('btn-success');
-            }
+            $(this).data('target', "false");
         }
 
-        $(target+' option[value='+value+']').attr('selected', true);
-        form.change();
-        console.log(target+' option[value='+value+']');
+        target = '#' + $(this).data('target');
+        $hiddenTgt = $(target).data('target');
+        value = $(target).data('value');
+        form = $('form');
 
+
+        $($hiddenTgt+' option[value='+value+']').attr('selected', true);
+        form.change();
         form.find( 'input[name="variation_id"], input.variation_id' ).val( '' ).change();
 		form.find( '.wc-no-matching-variations' ).remove();
 
@@ -48,7 +43,7 @@
 			form.trigger( 'check_variations' );
 		}
 
-		// Custom event for when variation selection has been changed
+		//Custom event for when variation selection has been changed
         form.trigger( 'woocommerce_variation_has_changed' );
         console.log('fin1');
     }

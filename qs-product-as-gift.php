@@ -37,6 +37,8 @@ if (! function_exists('is_woocommerce_activated')) {
 if (! function_exists('QS_PAG_styles')) {
     function QS_PAG_styles()
     {
+        wp_register_style('font-awesome', 'https://use.fontawesome.com/releases/v5.7.0/css/all.css');
+        wp_enqueue_style('font-awesome');
         wp_register_style('QS_PAG_css', plugin_dir_url(__FILE__) . 'css/main.css');
         wp_enqueue_style('QS_PAG_css');
     }
@@ -179,9 +181,11 @@ add_filter('woocommerce_locate_template', 'myplugin_woocommerce_locate_template'
 
         $html .= '</select>';
 
+
         if ($args['attribute'] == "pa_gift") {
             if (! empty($options)) {
-                $html .= '<div id="product-combinations" class="switch">Regálalo';
+                $html .= '<div class="switch-text"><i class="fa fa-gift"></i> Regálalo';
+                $html .= '<label id="product-combinations" class="switch">';
                 if ($product && taxonomy_exists($attribute)) {
                     // Get terms if this is a taxonomy - ordered. We need the names too.
                     $terms = wc_get_product_terms(
@@ -192,10 +196,20 @@ add_filter('woocommerce_locate_template', 'myplugin_woocommerce_locate_template'
                         )
                     );
     
-                    foreach ($terms as $term) {
-                        if (in_array($term->slug, $options, true)) {
-                            $html .= '<button data-target="#'.esc_attr($id).'" data-value="'. esc_attr($term->slug) .'" type="checkbox" value="' . esc_attr($term->slug) . '" ' . selected(sanitize_title($args['selected']), $term->slug, false) . '>' . esc_html(apply_filters('woocommerce_variation_option_name', $term->name, $term, $attribute, $product)) . '</button>';
+                    if (count($terms) == 2) {
+                        $html .= '<input type="checkbox" id="gift-switch" data-target="false">';
+                        $html .= '<div class="slider round"></div>';
+                        $html .= '</label></div>';
+
+                        $html .= '<div id="hidden-block">';
+                        foreach ($terms as $term) {
+                            if (in_array($term->slug, $options, true)) {
+                                $html .= '<input id="'.esc_attr($term->slug).'"  data-target="#'.esc_attr($id).'" data-value="'. esc_attr($term->slug) .'" type="hidden" value="' . esc_attr($term->slug) . '" ' . selected(sanitize_title($args['selected']), $term->slug, false) . '>';
+                            }
                         }
+                        $html .= '</div>';
+                    } else {
+                        echo '<div class="alert alert-warning"><p>ERROR: This module just works with two options</p></div>';
                     }
                 }
             }
